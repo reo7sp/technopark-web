@@ -27,17 +27,59 @@
     left: -40px;
 }
 
-.profile-menu__controls {
-}
-
 .profile-menu__name {
     margin: 0;
 }
 
-.profile-menu__links {
+.profile-menu__link {
+    cursor: pointer;
 }
 
-.profile-menu__link {
-    text-decoration: underline;
+
+.title-with-link-on-side {
+    display: inline-block;
+    margin-right: 16px;
+}
+
+.title-link {
+    font-size: 150%;
+}
+
+
+.question-list {
+    margin-top: 1em;
+}
+
+.question__image {
+    width: 100%;
+}
+
+.question__rating {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.question__rating-btn {
     cursor: pointer;
+}
+
+.question__rating-btn--down:hover {
+    color: red;
+}
+
+.question__rating-btn--up:hover {
+    color: green;
+}
+
+.question__title {
+    margin-top: 0;
+}
+
+.question__meta {
+    font-size: 125%;
+}
+
+.question__answer-btn {
+    margin-right: 15px;
 }
