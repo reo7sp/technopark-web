@@ -1,0 +1,43 @@
+.navbar-brand-bigger {
+    padding-top: 19px;
+    padding-bottom: 19px;
+}
+
+.navbar-form-bigger {
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.navbar-btn-bigger {
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+
+.profile-menu {
+    position: relative;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+.profile-menu__image {
+    height: 34px;
+    position: absolute;
+    top: 4px;
+    left: -40px;
+}
+
+.profile-menu__controls {
+}
+
+.profile-menu__name {
+    margin: 0;
+}
+
+.profile-menu__links {
+}
+
+.profile-menu__link {
+    text-decoration: underline;
+    cursor: pointer;
+}
