@@ -23,7 +23,7 @@
 
         {# Profile menu #}
         <div class="profile-menu navbar-right">
-            <img class="profile-menu__image" src="/static/images/profile.png">
+            <img class="profile-menu__image" src="{{ current_user.image_url }}">
 
             <p class="profile-menu__name">{{ current_user.nickname }}</p>
             <div class="profile-menu__links">

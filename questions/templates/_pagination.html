@@ -8,9 +8,11 @@
             </li>
         {% endif %}
 
-        {% for i in object_list.paginator.page_range %}
-            <li><a href="?page={{ i }}">{{ i }}</a></li>
-        {% endfor %}
+        {% if object_list.has_previous or object_list.has_next %}
+            {% for i in object_list.paginator.page_range %}
+                <li><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endfor %}
+        {% endif %}
 
         {% if object_list.has_next %}
             <li>

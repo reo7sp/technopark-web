@@ -25,11 +25,11 @@
 
                 <p class="question__meta">
                     {# Comment #}
-                    <a class="question__answer-btn" href="{% url 'question' question.id %}">answer ({{ question.comments_count }})</a>
+                    <a class="question__answer-btn" href="{% url 'question' question.id %}">answer ({{ question.comment_set.count }})</a>
 
                     {# Tags #}
                     Tags:
-                    {% for tag in question.tags %}
+                    {% for tag in question.tag_set.all %}
                         <a href="{% url 'tag' tag.slug %}">{{ tag.name }}</a>
                     {% endfor %}
                 </p>

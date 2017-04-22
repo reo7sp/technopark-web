@@ -1,74 +1,102 @@
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.contrib.auth.models import User
 
 
-class Question:
-    pass
+class ProfileManager(models.Manager):
+    def best_members(self, n):
+        return self.all()[:n]  # TODO: use likes
 
 
-class Comment:
-    pass
+class Profile(models.Model):
+    objects = ProfileManager()
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.ImageField()
+
+    @property
+    def login(self):
+        return self.user.username
+
+    @property
+    def email(self):
+        return self.user.email
+
+    @property
+    def nickname(self):
+        return self.user.first_name
+
+    @property
+    def image_url(self):
+        return '/static/images/profile.png'  # TODO
 
 
-class Tag:
-    pass
+class QuestionManager(models.Manager):
+    def all_new(self):
+        return self.all()
+
+    def all_hot(self):
+        return self.all()  # TODO: rating
 
 
-class User:
-    pass
+class Question(models.Model):
+    objects = QuestionManager()
+    title = models.CharField(max_length=100)
+    text = models.TextField()
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    @property
+    def rating(self):
+        return self.like_set.filter(is_up=True).count() - self.like_set.filter(is_up=False).count()
+
+    @property
+    def image_url(self):
+        return '/static/images/profile.png'  # TODO
 
 
-def sample_tags():
-    tags = []
-    for i in range(1, 15):
-        tag = Tag()
-        tag.name = 'tag ' + str(i)
-        tag.slug = tag.name.replace(' ', '-')
-        tags.append(tag)
-    return tags
+class Comment(models.Model):
+    text = models.TextField()
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    is_correct = models.BooleanField()
+
+    @property
+    def rating(self):
+        rating = 0
+        for like in self.like_set.all():
+            rating += 1 if like.is_up else 0
+        return rating
+
+    @property
+    def image_url(self):
+        return '/static/images/profile.png'  # TODO
 
 
-def sample_comments():
-    comments = []
-    for i in range(1, 45):
-        comment = Comment()
-        comment.id = 1
-        comment.text = 'comment ' + str(i)
-        comment.rating = 228
-        comment.is_correct = i % 2 == 0
-        comment.image_url = '/static/images/profile.png'
-        comments.append(comment)
-    return comments
+class TagManager(models.Manager):
+    def most_popular(self, n):
+        return self.order_by('-questions')[:n]
 
 
-def sample_questions():
-    questions = []
-    for i in range(1, 60):
-        question = Question()
-        question.id = i
-        question.title = 'title ' + str(i)
-        question.text = 'text ' + str(i)
-        question.rating = 228
-        question.tags = sample_tags()[:3]
-        question.comments_count = 2
-        question.image_url = '/static/images/profile.png'
-        questions.append(question)
-    return questions
+class Tag(models.Model):
+    objects = TagManager()
+    slug = models.CharField(max_length=30)
+    name = models.CharField(max_length=30)
+    questions = models.ManyToManyField(Question)
+
+    @property
+    def popularity(self):
+        return self.questions.count()
 
 
-def sample_users():
-    users = []
-    for i in range(1, 15):
-        user = User()
-        user.login = 'login ' + str(i)
-        user.email = 'a@a.com'
-        user.nickname = 'nickname ' + str(i)
-        users.append(user)
-    return users
+class Like(models.Model):
+    is_up = models.BooleanField()
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True)
+    author = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
-
-def sample_user():
-    user = User()
-    user.login = 'login'
-    user.email = 'a@a.com'
-    user.nickname = 'nickname'
-    return user
+    def clean(self):
+        if (self.question is not None) and (self.comment is not None):
+            raise ValidationError(_('Question and comment cannot be set both'))

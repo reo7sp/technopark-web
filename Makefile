@@ -12,6 +12,12 @@ run-django:
 run-wsgi-test:
 	gunicorn wsgi:wsgi_app
 
+run-mysql:
+	brew services run mysql
+
+stop-mysql:
+	brew services stop mysql
+
 
 browse:
 	open http://localhost:8080

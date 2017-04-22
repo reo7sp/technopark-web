@@ -2,12 +2,13 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render
 from django.views.decorators.http import require_GET, require_POST
 
-from questions.models import sample_questions, sample_tags, sample_comments, sample_user, sample_users
+from questions.models import Profile, Tag, Question, Comment
 
 
 def _paginate(objects_list, request):
-    paginator = Paginator(objects_list, 10)
+    objects_page = []
 
+    paginator = Paginator(objects_list, 10)
     page = request.GET.get('page')
     try:
         objects_page = paginator.page(page)
@@ -25,16 +26,16 @@ def _paginate(objects_list, request):
 
 def _sidebar_context():
     return {
-        'current_user': sample_user(),
-        'popular_tags': sample_tags()[:5],
-        'best_members': sample_users()[:5],
+        'current_user': Profile.objects.get(user__username='admin'),
+        'popular_tags': Tag.objects.most_popular(5),
+        'best_members': Profile.objects.best_members(5),
     }
 
 
 @require_GET
 def index(request):
     context = {
-        'questions': _paginate(sample_questions(), request),
+        'questions': _paginate(Question.objects.all_new(), request),
     }
     context.update(_sidebar_context())
     return render(request, 'index.html', context)
@@ -43,17 +44,18 @@ def index(request):
 @require_GET
 def hot(request):
     context = {
-        'questions': _paginate(sample_questions(), request),
+        'questions': _paginate(Question.objects.all_hot(), request),
     }
     context.update(_sidebar_context())
     return render(request, 'hot.html', context)
 
 
 @require_GET
-def tag(request, pk):
+def tag(request, slug):
+    tag = Tag.objects.get(slug=slug)
     context = {
-        'tag': sample_tags()[0],
-        'questions': _paginate(sample_questions(), request),
+        'tag': tag,
+        'questions': _paginate(Question.objects.filter(tag=tag), request),
     }
     context.update(_sidebar_context())
     return render(request, 'tag.html', context)
@@ -61,9 +63,10 @@ def tag(request, pk):
 
 def question(request, pk):
     if request.method == 'GET':
+        question = Question.objects.get(pk=pk)
         context = {
-            'question': sample_questions()[0],
-            'comments': _paginate(sample_comments(), request),
+            'question': question,
+            'comments': _paginate(Comment.objects.filter(question=question), request),
         }
         context.update(_sidebar_context())
         return render(request, 'question.html', context)
