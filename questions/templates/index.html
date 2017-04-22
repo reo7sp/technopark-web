@@ -1,0 +1,16 @@
+{% extends "_body.html" %}
+
+{% block title %}Questions index{% endblock %}
+
+{% block content %}
+    <h1 class="title-with-link-on-side">New questions</h1>
+    <a class="title-link" href="{% url 'hot' %}">Hot questions</a>
+
+    <div class="question-list">
+        {% for question in questions %}
+            {% include "_question.html" %}
+        {% endfor %}
+
+        {% include "_pagination.html" with object_list=questions %}
+    </div>
+{% endblock %}

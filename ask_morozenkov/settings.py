@@ -26,6 +26,8 @@ SECRET_KEY = 'n1v*a_$%djhl*v+%4i#3uu(n-od54$+xxr*f!$7s=-op8fep%)'
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
     'django'
 ]
 
@@ -39,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'questions',
+    'wsgi_test',
 ]
 
 MIDDLEWARE = [

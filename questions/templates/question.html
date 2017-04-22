@@ -1,0 +1,27 @@
+{% extends "_body.html" %}
+
+{% block title %}{{ question.title }}{% endblock %}
+
+{% block content %}
+    {% include "_question.html" %}
+
+    <hr class="comment-list-delimiter">
+
+    <div class="comments-list">
+        {% for comment in comments %}
+            {% include "_comment.html" %}
+        {% endfor %}
+
+        {% include "_pagination.html" with object_list=comments %}
+    </div>
+
+    <hr class="comment-list-delimiter">
+
+    <form method="post" action="{% url 'question' question.id %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <textarea class="form-control" id="text" rows="3" placeholder="Enter a comment..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-default">Comment</button>
+    </form>
+{% endblock %}

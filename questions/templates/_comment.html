@@ -1,0 +1,35 @@
+<div class="panel panel-default">
+    <div class="comment panel-body">
+        <div class="row">
+
+            <div class="col-md-2">
+                {# Image #}
+                <img class="comment__image" src="{{ comment.image_url }}">
+
+                {# Rating #}
+                <div class="comment__rating">
+                    <span class="comment__rating-btn comment__rating-btn--down glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+                    {{ comment.rating }}
+                    <span class="comment__rating-btn comment__rating-btn--up glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                </div>
+            </div>
+
+            <div class="col-md-10">
+                {# Text #}
+                <p class="comment__text">
+                    {{ comment.text }}
+                </p>
+
+                <p class="comment__meta">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" value="" {% if comment.is_correct %}checked{% endif %}>
+                            Correct!
+                        </label>
+                    </div>
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>

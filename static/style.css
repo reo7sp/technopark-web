@@ -76,10 +76,72 @@
     margin-top: 0;
 }
 
+.question__text {
+    font-size: 125%;
+}
+
 .question__meta {
     font-size: 125%;
 }
 
 .question__answer-btn {
     margin-right: 15px;
+}
+
+
+.comment-list-delimiter {
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+.comment-list {
+    margin-top: 1em;
+}
+
+.comment {
+    font-size: 95%;
+}
+
+.comment__image {
+    width: 100%;
+}
+
+.comment__rating {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 15px;
+}
+
+.comment__rating-btn {
+    cursor: pointer;
+}
+
+.comment__rating-btn--down:hover {
+    color: red;
+}
+
+.comment__rating-btn--up:hover {
+    color: green;
+}
+
+.comment__text {
+    font-size: 125%;
+}
+
+.comment__meta {
+}
+
+.comment__answer-btn {
+    margin-right: 15px;
+}
+
+
+.create-new-account {
+    margin-top: 1em;
+}
+
+
+.page-footer {
+    margin-top: 2em;
+    margin-bottom: 2em;
 }

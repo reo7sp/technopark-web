@@ -1,0 +1,36 @@
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+
+        {# Title #}
+        <a class="navbar-brand navbar-brand-bigger" href="{% url 'index' %}">AskMorozenkov</a>
+
+        {# Search box #}
+        <form class="navbar-form navbar-left navbar-form-bigger" role="search" method="post" action="{% url 'settings' %}">
+            <div class="form-group">
+                <div class="input-group">
+                    <input class="form-control" type="text" placeholder="Search">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">
+                            <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </form>
+
+        {# Ask button #}
+        <a href="{% url 'ask' %}"><button class="btn btn-success navbar-btn navbar-btn-bigger" type="button">Ask!</button></a>
+
+        {# Profile menu #}
+        <div class="profile-menu navbar-right">
+            <img class="profile-menu__image" src="/static/images/profile.png">
+
+            <p class="profile-menu__name">{{ current_user.nickname }}</p>
+            <div class="profile-menu__links">
+                <a class="profile-menu__link" href="{% url 'settings' %}">Settings</a>
+                <a class="profile-menu__link" href="{% url 'logout' %}" id="logout-link">Log out</a> <!-- js -->
+            </div>
+        </div>
+
+    </div>
+</nav>

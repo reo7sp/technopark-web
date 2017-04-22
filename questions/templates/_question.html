@@ -1,0 +1,40 @@
+<div class="panel panel-default">
+    <div class="question panel-body">
+        <div class="row">
+
+            <div class="col-md-2">
+                {# Image #}
+                <img class="question__image" src="{{ question.image_url }}">
+
+                {# Rating #}
+                <div class="question__rating">
+                    <span class="question__rating-btn question__rating-btn--down glyphicon glyphicon-thumbs-down" aria-hidden="true"></span>
+                    {{ question.rating }}
+                    <span class="question__rating-btn question__rating-btn--up glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                </div>
+            </div>
+
+            <div class="col-md-10">
+                {# Title #}
+                <h2 class="question__title">{{ question.title }}</h2>
+
+                {# Text #}
+                <p class="question__text">
+                    {{ question.text }}
+                </p>
+
+                <p class="question__meta">
+                    {# Comment #}
+                    <a class="question__answer-btn" href="{% url 'question' question.id %}">answer ({{ question.comments_count }})</a>
+
+                    {# Tags #}
+                    Tags:
+                    {% for tag in question.tags %}
+                        <a href="{% url 'tag' tag.slug %}">{{ tag.name }}</a>
+                    {% endfor %}
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>

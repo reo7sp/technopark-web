@@ -1,0 +1,15 @@
+{% extends "_body.html" %}
+
+{% block title %}{{ tag.name }}{% endblock %}
+
+{% block content %}
+    <h1>Tag: {{ tag.name }}</h1>
+
+    <div class="question-list">
+        {% for question in questions %}
+            {% include "_question.html" %}
+        {% endfor %}
+
+        {% include "_pagination.html" with object_list=questions %}
+    </div>
+{% endblock %}
