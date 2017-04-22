@@ -46,7 +46,7 @@ def sample_questions():
         question = Question()
         question.id = i
         question.title = 'title ' + str(i)
-        question.text = 'text' + str(i)
+        question.text = 'text ' + str(i)
         question.rating = 228
         question.tags = sample_tags()[:3]
         question.comments_count = 2
