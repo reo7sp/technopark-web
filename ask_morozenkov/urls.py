@@ -20,4 +20,6 @@ urlpatterns = [
     url(r'question/', include('questions.urls')),
 
     url(r'^admin/', admin.site.urls),
+
+    url(r'^wsgi-test/', include('wsgi_test.urls'))
 ]

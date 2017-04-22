@@ -17,5 +17,10 @@ browse:
 	open http://localhost:8080
 
 
+test-wsgi:
+	curl -X GET "http://localhost:8000/wsgi-test/?a=b&c=d"; python -c 'print("-" * 80)'
+	curl -X POST -d "a=b&c=d" http://localhost:8000/wsgi-test/
+
+
 install:
 	pip install -r requirements.txt

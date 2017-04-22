@@ -1,4 +1,4 @@
-import json
+from urllib.parse import parse_qsl
 
 
 def wsgi_app(environ, start_response):
@@ -11,23 +11,21 @@ def wsgi_app(environ, start_response):
 
     if environ['REQUEST_METHOD'] == 'GET':
         output.append('GET request')
-        query = environ['QUERY_STRING']
-        param_pairs = query.split('&')
-        for param_pair in param_pairs:
-            try:
-                k, v = param_pair.split('=')
-                output.append('{} = {}'.format(k, v))
-            except ValueError:
-                pass
+        query = parse_qsl(environ['QUERY_STRING'])
+        for k, v in query:
+            output.append('{} = {}'.format(k, v))
 
     if environ['REQUEST_METHOD'] == 'POST':
         output.append('POST request')
         post_data = environ['wsgi.input'].read().decode()
-        if len(post_data) > 0:
-            post_data = json.loads(post_data)
-            for k, v in post_data.items():
+        if environ.get('CONTENT_TYPE') == 'application/x-www-form-urlencoded':
+            query = parse_qsl(post_data)
+            for k, v in query:
                 output.append('{} = {}'.format(k, v))
+        else:
+            output.append(post_data)
 
+    output.append('')
     start_response(status, headers)
     return ["\n".join(output).encode('utf-8')]
 
