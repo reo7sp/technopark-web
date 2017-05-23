@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.template.defaulttags import url
 from django.views.decorators.http import require_GET, require_POST
 
-from questions.forms import LoginForm, SignupForm, QuestionForm
+from questions.forms import LoginForm, SignupForm, QuestionForm, ProfileSettingsForm
 from questions.models import Profile, Tag, Question, Comment
 
 
@@ -106,12 +106,12 @@ def login_view(request):
 
             if user is not None:
                 login(request, user)
-                return redirect('index')
+                return redirect(request.GET.get('next', 'index'));
             else:
                 messages.error(request, 'Wrong user or password')
 
     context = {
-        'form': form
+        'form': form,
     }
     context.update(_sidebar_context(request))
     return render(request, 'login.html', context)
@@ -163,10 +163,22 @@ def ask(request):
 
 @login_required
 def settings(request):
+    profile = _current_profile(request)
     if request.method == 'GET':
-        context = {
-        }
-        context.update(_sidebar_context(request))
-        return render(request, 'settings.html', context)
+        form = ProfileSettingsForm()
+        form.data['email'] = profile.email
+        form.data['nickname'] = profile.nickname
     elif request.method == 'POST':
-        raise NotImplementedError  # TODO
+        form = ProfileSettingsForm(request.POST, request.FILES)
+        if form.is_valid():
+            profile.user.email = form.cleaned_data['email']
+            profile.nickname = form.cleaned_data['nickname']
+            if 'avatar' in request.FILES:
+                profile.avatar = request.FILES['avatar']
+            profile.save()
+
+    context = {
+        'form': form
+    }
+    context.update(_sidebar_context(request))
+    return render(request, 'settings.html', context)

@@ -1,6 +1,6 @@
 from django import forms
 
-from questions.models import Question
+from questions.models import Question, Profile
 
 
 class LoginForm(forms.Form):
@@ -21,6 +21,12 @@ class SignupForm(forms.Form):
 
         if cleaned_data.get('password') != cleaned_data.get('password_confirmation'):
             self.add_error('password_confirmation', 'Password and password confirmation must match')
+
+
+class ProfileSettingsForm(forms.Form):
+    email = forms.EmailField(max_length=32)
+    nickname = forms.CharField(max_length=32)
+    avatar = forms.FileField(required=False)
 
 
 class QuestionForm(forms.ModelForm):
