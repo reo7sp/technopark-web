@@ -4,6 +4,10 @@ from django.contrib.auth.models import User
 
 
 class ProfileManager(models.Manager):
+    def create(self, username, email, password, nickname, avatar):
+        user = User.objects.create_user(username, email, password)
+        return super().create(user=user, avatar=avatar, nickname=nickname)
+
     def best_members(self, n):
         return self.all()[:n]  # TODO: use likes
 
@@ -11,6 +15,7 @@ class ProfileManager(models.Manager):
 class Profile(models.Model):
     objects = ProfileManager()
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    nickname = models.CharField(max_length=100)
     avatar = models.ImageField()
 
     @property
@@ -22,8 +27,8 @@ class Profile(models.Model):
         return self.user.email
 
     @property
-    def nickname(self):
-        return self.user.first_name
+    def password(self):
+        return self.user.password
 
     @property
     def image_url(self):

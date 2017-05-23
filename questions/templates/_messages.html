@@ -1,0 +1,5 @@
+{% load status_to_css_class %}
+
+{% for message in messages %}
+    <div class="alert alert-{{ message.tags|status_to_css_class }}" role="alert">{{ message }}</div>
+{% endfor %}

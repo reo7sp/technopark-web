@@ -1,36 +1,15 @@
-{% extends "_body.html" %}
+{% extends "_base.html" %}
 
 {% block title %}Sign up{% endblock %}
 
-{% block content %}
-    <h1>Sign up</h1>
+{% block body %}
+    <div class="container">
+        <h1>Sign up</h1>
 
-    <form method="post" action="{% url 'signup' %}">
-        {% csrf_token %}
-        <div class="form-group">
-            <label for="login">Login</label>
-            <input class="form-control" id="login" type="text" placeholder="Login" value="{{ user.login }}">
-        </div>
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input class="form-control" id="email" type="email" placeholder="Email" value="{{ user.email }}">
-        </div>
-        <div class="form-group">
-            <label for="nickname">Nickname</label>
-            <input class="form-control" id="nickname" type="test" placeholder="Nickname" value="{{ user.nickname }}">
-        </div>
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input class="form-control" id="password" type="password" placeholder="Password">
-        </div>
-        <div class="form-group">
-            <label for="password">Password confirmation</label>
-            <input class="form-control" id="password-confirmation" type="password" placeholder="Password confirmation">
-        </div>
-        <div class="form-group">
-            <label for="avatar">Avatar</label>
-            <input type="file" id="avatar">
-        </div>
-        <button type="submit" class="btn btn-default">Sign up</button>
-    </form>
+        {% include "_messages.html" %}
+
+        <form method="post" action="{% url 'signup' %}">
+            {% include "_form.html" with form_submit_btn_name="Sign up" %}
+        </form>
+    </div>
 {% endblock %}
