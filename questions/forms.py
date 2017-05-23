@@ -1,5 +1,7 @@
 from django import forms
 
+from questions.models import Question
+
 
 class LoginForm(forms.Form):
     login = forms.CharField(max_length=32)
@@ -19,3 +21,11 @@ class SignupForm(forms.Form):
 
         if cleaned_data.get('password') != cleaned_data.get('password_confirmation'):
             self.add_error('password_confirmation', 'Password and password confirmation must match')
+
+
+class QuestionForm(forms.ModelForm):
+    tags = forms.CharField(max_length=100, required=False, label='Tags (comma separated)')
+
+    class Meta:
+        model = Question
+        fields = ['title', 'text']

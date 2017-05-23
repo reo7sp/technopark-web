@@ -19,8 +19,8 @@ class Command(BaseCommand):
     def _populate_profiles(self):
         if User.objects.count() > 0:
             return
-        user = User.objects.create_superuser('admin', 'admin@example.com', '1234', first_name='The admin user')
-        Profile.objects.create(user=user)
+        user = User.objects.create_superuser('admin', 'admin@example.com', '1234')
+        Profile.objects.create(user=user, nickname='The admin user')
 
     def _populate_questions(self):
         if Question.objects.count() > 0:

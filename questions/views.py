@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.template.defaulttags import url
 from django.views.decorators.http import require_GET, require_POST
 
-from questions.forms import LoginForm, SignupForm
+from questions.forms import LoginForm, SignupForm, QuestionForm
 from questions.models import Profile, Tag, Question, Comment
 
 
@@ -29,14 +29,16 @@ def _paginate(objects_list, request):
     return objects_page
 
 
-def _sidebar_context(request):
+def _current_profile(request):
     if request.user is None or request.user.id is None:
-        profile = None
+        return None
     else:
-        profile = Profile.objects.get(user_id=request.user.id)
-    print(profile)
+        return Profile.objects.get(user_id=request.user.id)
+
+
+def _sidebar_context(request):
     return {
-        'current_user': profile,
+        'current_user': _current_profile(request),
         'popular_tags': Tag.objects.most_popular(5),
         'best_members': Profile.objects.best_members(5),
     }
@@ -121,8 +123,8 @@ def signup(request):
     elif request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
-            profile = Profile.objects.create(form.cleaned_data['login'], form.cleaned_data['email'], form.cleaned_data['password'],
-                                             nickname=form.cleaned_data['nickname'], avatar=form.cleaned_data['avatar'])
+            profile = Profile.objects.create_user(form.cleaned_data['login'], form.cleaned_data['email'], form.cleaned_data['password'],
+                                                  nickname=form.cleaned_data['nickname'], avatar=form.cleaned_data['avatar'])
             login(request, profile.user)
             return redirect('index')
 
@@ -136,12 +138,27 @@ def signup(request):
 @login_required
 def ask(request):
     if request.method == 'GET':
-        context = {
-        }
-        context.update(_sidebar_context(request))
-        return render(request, 'ask.html', context)
+        form = QuestionForm()
     elif request.method == 'POST':
-        raise NotImplementedError  # TODO
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            title_ = form.cleaned_data['title']
+            text_ = form.cleaned_data['text']
+            tags_ = form.cleaned_data['tags'] if 'tags' in form.cleaned_data else ''
+            profile_ = _current_profile(request)
+
+            question = Question.objects.create(title=title_, text=text_, author=profile_)
+
+            question.tags_str = tags_
+            question.save()
+
+            return redirect('question', question.id)
+
+    context = {
+        'form': form
+    }
+    context.update(_sidebar_context(request))
+    return render(request, 'ask.html', context)
 
 
 @login_required

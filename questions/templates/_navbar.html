@@ -23,7 +23,9 @@
 
         {# Profile menu #}
         <div class="profile-menu navbar-right">
-            <img class="profile-menu__image" src="{{ current_user.image_url }}">
+            {% if current_user.avatar %}
+                <img class="profile-menu__image" src="{{ current_user.avatar.url }}">
+            {% endif %}
 
             <p class="profile-menu__name">{{ current_user.nickname }}</p>
             <div class="profile-menu__links">

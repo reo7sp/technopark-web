@@ -4,9 +4,9 @@ from django.contrib.auth.models import User
 
 
 class ProfileManager(models.Manager):
-    def create(self, username, email, password, nickname, avatar):
+    def create_user(self, username, email, password, nickname, avatar):
         user = User.objects.create_user(username, email, password)
-        return super().create(user=user, avatar=avatar, nickname=nickname)
+        return self.create(user=user, avatar=avatar, nickname=nickname)
 
     def best_members(self, n):
         return self.all()[:n]  # TODO: use likes
@@ -61,6 +61,19 @@ class Question(models.Model):
     def image_url(self):
         return '/static/images/profile.png'  # TODO
 
+    @property
+    def tags_str(self):
+        return ', '.join(tag.name for tag in self.tag_set)
+
+    @tags_str.setter
+    def tags_str(self, tags_str):
+        self.tag_set.clear()
+        for tag_str in tags_str.split(','):
+            tag, is_created = Tag.objects.get_or_create(name=tag_str.strip())
+            if is_created:
+                tag.set_slug_from_name()
+            self.tag_set.add(tag)
+
 
 class Comment(models.Model):
     text = models.TextField()
@@ -95,13 +108,12 @@ class Tag(models.Model):
     def popularity(self):
         return self.questions.count()
 
+    def set_slug_from_name(self):
+        self.slug = self.name.replace(' ', '-')
+
 
 class Like(models.Model):
     is_up = models.BooleanField()
     question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True)
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, null=True)
     author = models.ForeignKey(Profile, on_delete=models.CASCADE)
-
-    def clean(self):
-        if (self.question is not None) and (self.comment is not None):
-            raise ValidationError(_('Question and comment cannot be set both'))
